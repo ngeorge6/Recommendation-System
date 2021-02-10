@@ -52,7 +52,6 @@ print ("ClusteringCoeff = ", amazonBooks.loc[purchasedAsin,'ClusteringCoeff'])
 # that have been copurchased with this book in the past
 #     Get the depth-1 ego network of purchasedAsin from copurchaseGraph,
 #     and assign the resulting graph to purchasedAsinEgoGraph.
-# (1) YOUR CODE HERE: 
 G = copurchaseGraph
 n = purchasedAsin
 ego = networkx.ego_graph(G, n, radius=1)
@@ -65,9 +64,7 @@ purchasedAsinEgoGraph = ego
 # the similarity between the books connected by the edge. So we can use the 
 # island method to only retain those books that are highly simialr to the 
 # purchasedAsin
-# (2) YOUR CODE HERE: 
-#     Use the island method on purchasedAsinEgoGraph to only retain edges with 
-#     threshold >= 0.5, and assign resulting graph to purchasedAsinEgoTrimGraph
+#     Use the island method on purchasedAsinEgoGraph to only retain edges with threshold >= 0.5, and assign resulting graph to purchasedAsinEgoTrimGraph
 threshold = 0.5
 purchasedAsinEgoTrimGraph = networkx.Graph()
 for f, t, e in purchasedAsinEgoGraph.edges(data=True):
@@ -89,9 +86,7 @@ plt.show()
 # Next, recall that given the purchasedAsinEgoTrimGraph you constructed above, 
 # you can get at the list of nodes connected to the purchasedAsin by a single 
 # hop (called the neighbors of the purchasedAsin) 
-# (3) YOUR CODE HERE: 
-#     Find the list of neighbors of the purchasedAsin in the 
-#     purchasedAsinEgoTrimGraph, and assign it to purchasedAsinNeighbors
+#     Find the list of neighbors of the purchasedAsin in the purchasedAsinEgoTrimGraph, and assign it to purchasedAsinNeighbors
 purchasedAsinNeighbors = purchasedAsinEgoTrimGraph.neighbors(n)
 df1 = pd.DataFrame(data =list(purchasedAsinNeighbors), columns = ['ASIN'])
 df = pd.merge(df1, df2, on = 'ASIN')
@@ -101,20 +96,6 @@ df = pd.merge(df1, df2, on = 'ASIN')
 # purchasedAsinNeighbors based on one or more of the following data of the 
 # neighboring nodes: SalesRank, AvgRating, TotalReviews, DegreeCentrality, 
 # and ClusteringCoeff
-# (4) YOUR CODE HERE: 
-#     Note that, given an asin, you can get at the metadata associated with  
-#     it using amazonBooks (similar to lines 29-36 above).
-#     Now, come up with a composite measure to make Top Five book 
-#     recommendations based on one or more of the following metrics associated 
-#     with nodes in purchasedAsinNeighbors: SalesRank, AvgRating, 
-#     TotalReviews, DegreeCentrality, and ClusteringCoeff. Feel free to compute
-#     and include other measures if you like.
-#     YOU MUST come up with a composite measure.
-#     DO NOT simply make recommendations based on sorting!!!
-#     Also, remember to transform the data appropriately using 
-#     sklearn preprocessing so the composite measure isn't overwhelmed 
-#     by measures which are on a higher scale.
-
 df['ARFactor'] = df['AvgRating'].apply(lambda x: 0.5 if x<AvgRat else 1)
 
 mean_srf = df['SalesRank'].mean()
@@ -133,6 +114,5 @@ RecTable = df.sort_values(by='Recommendation', ascending=False)
 
 # Print Top 5 recommendations (ASIN, and associated Title, Sales Rank, 
 # TotalReviews, AvgRating, DegreeCentrality, ClusteringCoeff)
-# (5) YOUR CODE HERE:
 RecTable.drop(['Id', 'Categories', 'ARFactor', 'SRFactor', 'DC', 'DCFactor'], axis = 1, inplace = True)
 print(RecTable[0:5])
